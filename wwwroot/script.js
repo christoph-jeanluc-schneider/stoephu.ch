@@ -5,14 +5,16 @@ const scaleFactor = 1;
 
 const nodeSize = 12 * scaleFactor;
 const drawNodes = false;
-const speedMultipier = 3;
+const speedMultipier = 2;
 
-const birthTransition = 20000;
+// const birthTransition = 20000;
+const birthTransition = 0;
 
 const nodeGap = 80 * scaleFactor;
 const maxConnectionDistance = 120 * scaleFactor;
 
 var nodes = [];
+var connections = {};
 var mode = 0;
 
 function setup() {
@@ -27,13 +29,15 @@ function setup() {
 
     for( let c = 0; c < columns; c++ ) {
         for( let r = 0; r < rows; r++ ) {
-            nodes.push( new Node( c * nodeGap + Xoffset, r * nodeGap + Yoffset, nodeSize, Math.floor( random( birthTransition ) ) ) );
+            nodes.push( new Node( ( r * columns ) + c, c * nodeGap + Xoffset, r * nodeGap + Yoffset, nodeSize, Math.floor( random( birthTransition ) ) ) );
         }
     }
 }
 
 function draw() {
     background( 51 );
+
+    connections = {};
 
     for( let n in nodes ) {
         nodes[ n ].update();
@@ -48,8 +52,12 @@ function draw() {
 }
 
 function drawConnection( n1, n2 ) {
-    if( n1.pos.x == n2.pos.x && n1.pos.y == n2.pos.y ) return;
+    if( n1.id == n2.id ) return;
     if( !n1.alive || !n2.alive ) return;
+
+    if( connections[ n2.id ] && connections[ n2.id ][ n1.id ] ) return;
+    if( !connections[ n1.id ] ) connections[ n1.id ] = {};
+    connections[ n1.id ][ n2.id ] = true;
 
     let distance = n1.pos.dist( n2.pos );
     if( distance <= maxConnectionDistance ) {
@@ -65,7 +73,8 @@ function drawConnection( n1, n2 ) {
 
 // NODE
 class Node {
-    constructor( x, y, size, birthDelay ) {
+    constructor( id, x, y, size, birthDelay ) {
+        this.id = id;
         this.pos = createVector( x, y );
         this.vel = p5.Vector.random2D().mult( 0.4 );
         this.size = size;
