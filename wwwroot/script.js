@@ -33,7 +33,7 @@ function setup() {
 }
 
 function draw() {
-    background( 51, 80 );
+    background( 51 );
 
     for( let n in nodes ) {
         nodes[ n ].update();
