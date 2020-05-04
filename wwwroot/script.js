@@ -7,8 +7,7 @@ const nodeSize = 12 * scaleFactor;
 const drawNodes = false;
 const speedMultipier = 2;
 
-// const birthTransition = 20000;
-const birthTransition = 0;
+const birthTransition = 20000;
 
 const nodeGap = 80 * scaleFactor;
 const maxConnectionDistance = 120 * scaleFactor;
