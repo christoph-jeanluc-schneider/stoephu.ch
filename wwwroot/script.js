@@ -5,6 +5,7 @@ const scaleFactor = 1;
 
 const nodeSize = 12 * scaleFactor;
 const drawNodes = false;
+const speedMultipier = 3;
 
 const birthTransition = 20000;
 
@@ -13,7 +14,6 @@ const maxConnectionDistance = 120 * scaleFactor;
 
 var nodes = [];
 var mode = 0;
-var ticks = 0;
 
 function setup() {
     createCanvas( vw * scaleFactor, vh * scaleFactor );
@@ -30,11 +30,10 @@ function setup() {
             nodes.push( new Node( c * nodeGap + Xoffset, r * nodeGap + Yoffset, nodeSize, Math.floor( random( birthTransition ) ) ) );
         }
     }
-    // nodes.push( new Node( vw / 2, vh / 2, nodeSize, 0 ) );
 }
 
 function draw() {
-    background( 51 );
+    background( 51, 80 );
 
     for( let n in nodes ) {
         nodes[ n ].update();
@@ -46,9 +45,6 @@ function draw() {
             drawConnection( nodes[ n ], nodes[ o ] );
         }
     }
-
-    ticks++;
-    // console.log( Math.floor( frameRate() ) );
 }
 
 function drawConnection( n1, n2 ) {
@@ -102,7 +98,10 @@ class Node {
 
 
         // update position
-        this.pos.add( this.vel.x, this.vel.y );
+        if( mode == 0 )
+            this.pos.add( this.vel.x * speedMultipier, this.vel.y * speedMultipier );
+        else
+            this.pos.add( this.vel.x * speedMultipier, this.vel.x * speedMultipier );
 
         // check alive
         if( !this.alive )
